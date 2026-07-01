@@ -24,7 +24,7 @@ Build this snap on an arm64 Jetson Orin Nano, or on an equivalent arm64 build
 host with CUDA toolkit packages available:
 
 ```shell
-snapcraft pack
+snapcraft pack --destructive-mode
 ```
 
 The llama.cpp component is built with `GGML_CUDA=ON` and
