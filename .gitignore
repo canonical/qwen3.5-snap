@@ -1,0 +1,15 @@
+# Snap artifacts
+partitions/
+parts/
+stage/
+prime/
+*.snap
+*.comp
+*.assert
+squashfs-root
+
+# snap try trees
+try-root/
+
+# Weights
+*.gguf

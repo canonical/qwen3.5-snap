@@ -1,0 +1,24 @@
+#!/bin/bash -eu
+
+# Set generic config
+modelctl set --package http.port="9090"
+modelctl set --package http.host="127.0.0.1"
+
+select_engine() {
+    if modelctl use-engine --auto --assume-yes; then
+        return
+    fi
+
+    echo "Automatic engine selection did not select an engine. Selecting Jetson CUDA engine explicitly."
+    modelctl use-engine jetson-orin-nano-cuda --assume-yes
+}
+
+# Auto select an engine
+if snapctl is-connected hardware-observe; then
+    select_engine
+elif lscpu -V &> /dev/null; then
+    echo "Able to access hardware info without hardware-observe interface connection: assuming dev mode installation."
+    select_engine
+else
+    echo "hardware-observe interface not auto connected. Skip auto engine selection."
+fi

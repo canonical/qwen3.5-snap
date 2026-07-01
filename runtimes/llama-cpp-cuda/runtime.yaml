@@ -1,0 +1,15 @@
+servers:
+  openai:
+    protocol: http
+    base-path: /v1
+
+name: llama-cpp-cuda
+description: CUDA-enabled llama.cpp HTTP server for Jetson Orin Nano
+vendor: Canonical
+grade: devel
+components:
+  - llama-cpp-cuda
+configurations:
+  http.host: 127.0.0.1
+  http.base-path: v1
+  gpu-layers: 99

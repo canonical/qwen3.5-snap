@@ -1,0 +1,4 @@
+environment:
+# To find the model within the component's directory
+- MODEL_FILE=$COMPONENT/Qwen3.5-4B-UD-Q4_K_XL.gguf
+

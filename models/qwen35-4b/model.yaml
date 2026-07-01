@@ -1,0 +1,17 @@
+id: qwen35-4b
+name: qwen35-4b
+summary: Qwen 3.5 4B
+description: Qwen 3.5 4B UD-Q4_K_XL GGUF with BF16 multimodal projector
+vendor: Canonical
+grade: devel
+size: 3584533344
+disk-size: 4G
+quantization: UD-Q4_K_XL
+model-card-url: https://huggingface.co/unsloth/Qwen3.5-4B-GGUF
+license: Apache-2.0
+components:
+  - model-qwen35-4b-ud-q4-k-xl
+  - model-qwen35-4b-mmproj-bf16
+configurations:
+  model: model-qwen35-4b-ud-q4-k-xl
+  multimodel-projector: model-qwen35-4b-mmproj-bf16

@@ -1,0 +1,5 @@
+#!/bin/bash -eu
+
+# Backfill package-level HTTP config for existing installs.
+modelctl set --package http.port="9090"
+modelctl set --package http.host="127.0.0.1"
