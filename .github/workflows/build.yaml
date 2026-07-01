@@ -32,6 +32,21 @@ jobs:
             *.comp
           if-no-files-found: error
 
+      - name: Split large assets for the release
+        # GitHub release assets are capped at 2 GiB each. Split every snap and
+        # component into <2 GiB parts (named <file>.partNN) so they can be
+        # attached to the release and reassembled after download.
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p release
+          for f in *.snap *.comp; do
+            [ -e "$f" ] || continue
+            # 1900 MiB chunks stay safely under the 2 GiB (2147483648 B) limit.
+            split -b 1900M -d -a 2 "$f" "release/${f}.part"
+            sha256sum "$f" > "release/${f}.sha256"
+          done
+          ls -lh release
+
       - name: Publish latest build to a rolling release
         # Only publish on merges/pushes to main, not on manual branch runs.
         if: github.ref == 'refs/heads/main'
@@ -39,8 +54,12 @@ jobs:
         with:
           tag_name: latest
           name: Latest build
+          # Assets are split into <2 GiB parts. Reassemble after download, e.g.:
+          #   cat qwen3-5-jetson+model-qwen35-4b-ud-q4-k-xl.comp.part* \
+          #     > qwen3-5-jetson+model-qwen35-4b-ud-q4-k-xl.comp
+          #   sha256sum -c qwen3-5-jetson+model-qwen35-4b-ud-q4-k-xl.comp.sha256
           files: |
-            *.snap
-            *.comp
+            release/*.part*
+            release/*.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
