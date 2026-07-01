@@ -1,7 +1,17 @@
-# qwen35-orin-core24
+# Qwen 3.5 Jetson snap
+
+[![qwen3-5-jetson](https://snapcraft.io/qwen3-5-jetson/badge.svg)](https://snapcraft.io/qwen3-5-jetson)
 
 Core24 inference snap for Qwen 3.5 4B on NVIDIA Jetson Orin Nano using a
 CUDA-enabled llama.cpp backend.
+
+## Resources
+
+📚 **[Documentation](https://documentation.ubuntu.com/inference-snaps/)**, learn how to use inference snaps
+
+💬 **[Discussions](https://github.com/canonical/inference-snaps/discussions)**, ask questions and share ideas
+
+🐛 **[Issues](https://github.com/canonical/inference-snaps/issues)**, report bugs and request features
 
 The model component downloads:
 
@@ -16,7 +26,7 @@ Build this snap on an arm64 Jetson Orin Nano, or on an equivalent arm64 build
 host with CUDA toolkit packages available:
 
 ```shell
-snapcraft pack --destructive-mode
+snapcraft pack
 ```
 
 The llama.cpp component is built with `GGML_CUDA=ON` and
@@ -26,27 +36,27 @@ capability.
 ## Local install
 
 ```shell
-sudo snap install --dangerous qwen35-orin-core24_*.snap
-sudo snap install --dangerous qwen35-orin-core24+llama-cpp-cuda.comp
-sudo snap install --dangerous qwen35-orin-core24+model-qwen35-4b-ud-q4-k-xl.comp
-sudo snap install --dangerous qwen35-orin-core24+model-qwen35-4b-mmproj-bf16.comp
-sudo snap connect qwen35-orin-core24:hardware-observe
-sudo snap connect qwen35-orin-core24:opengl
-sudo qwen35-orin-core24 use-engine --auto
-sudo snap start qwen35-orin-core24
+sudo snap install --dangerous qwen3-5-jetson_*.snap
+sudo snap install --dangerous qwen3-5-jetson+llama-cpp-cuda.comp
+sudo snap install --dangerous qwen3-5-jetson+model-qwen35-4b-ud-q4-k-xl.comp
+sudo snap install --dangerous qwen3-5-jetson+model-qwen35-4b-mmproj-bf16.comp
+sudo snap connect qwen3-5-jetson:hardware-observe
+sudo snap connect qwen3-5-jetson:opengl
+sudo qwen3-5-jetson use-engine --auto
+sudo snap start qwen3-5-jetson
 ```
 
 The engine is initially marked `devel`. If automatic selection skips it, select
 it explicitly:
 
 ```shell
-sudo qwen35-orin-core24 use-engine jetson-orin-nano-cuda
+sudo qwen3-5-jetson use-engine jetson-orin-nano-cuda
 ```
 
 Check logs for CUDA backend initialization:
 
 ```shell
-snap logs qwen35-orin-core24
+snap logs qwen3-5-jetson
 ```
 
 The service runs as root, which is required on the tested Jetson Orin Nano image
@@ -60,7 +70,7 @@ because Jetson Orin Nano exposes an integrated NVIDIA GPU rather than a typical
 PCI GPU. After installing on the Jetson, inspect the detected machine shape:
 
 ```shell
-qwen35-orin-core24 show-machine --format=json
+qwen3-5-jetson show-machine --format=json
 ```
 
 If the integrated GPU is reported with a supported NVIDIA GPU manifest shape,

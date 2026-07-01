@@ -1,4 +1,4 @@
-name: qwen35-orin-core24
+name: qwen3-5-jetson
 base: core24
 version: 'v1'
 summary: Qwen 3.5 inference snap for Jetson Orin Nano
@@ -125,7 +125,7 @@ parts:
     plugin: dump
     override-build: |
       # For tab completion
-      ln --symbolic ./modelctl bin/qwen35-orin-core24
+      ln --symbolic ./modelctl bin/qwen3-5-jetson
 
       craftctl default
     
@@ -160,7 +160,7 @@ components:
     description: llama.cpp HTTP server built with CUDA support for Jetson Orin Nano
 
 apps:
-  qwen35-orin-core24:
+  qwen3-5-jetson:
     command: bin/modelctl
     completer: bin/snap-completer.bash
     plugs:

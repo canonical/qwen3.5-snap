@@ -1,0 +1,31 @@
+name: Build snap
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # allow manual runs
+
+jobs:
+  build:
+    # The snap targets arm64 (Jetson Orin Nano), so build on Canonical's
+    # self-hosted arm64 runners.
+    runs-on: [self-hosted, arm64, noble, large]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install snapcraft
+        run: sudo snap install snapcraft --classic
+
+      - name: Build snap
+        run: snapcraft pack -v
+
+      - name: Upload snap artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwen3-5-jetson-snap
+          path: |
+            *.snap
+            *.comp
+          if-no-files-found: error
