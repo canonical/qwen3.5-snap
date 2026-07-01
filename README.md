@@ -1,7 +1,5 @@
 # Qwen 3.5 Jetson snap
 
-[![qwen3-5-jetson](https://snapcraft.io/qwen3-5-jetson/badge.svg)](https://snapcraft.io/qwen3-5-jetson)
-
 Core24 inference snap for Qwen 3.5 4B on NVIDIA Jetson Orin Nano using a
 CUDA-enabled llama.cpp backend.
 
