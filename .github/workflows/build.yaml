@@ -10,7 +10,7 @@ jobs:
   build:
     # The snap targets arm64 (Jetson Orin Nano), so build on Canonical's
     # self-hosted arm64 runners.
-    runs-on: [self-hosted, arm64, noble, large]
+    runs-on: [self-hosted, arm64, noble]
     permissions:
       contents: write # allow GITHUB_TOKEN to create/update the release
     steps:
