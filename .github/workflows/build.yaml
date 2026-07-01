@@ -11,6 +11,8 @@ jobs:
     # The snap targets arm64 (Jetson Orin Nano), so build on Canonical's
     # self-hosted arm64 runners.
     runs-on: [self-hosted, arm64, noble, large]
+    permissions:
+      contents: write # allow GITHUB_TOKEN to create/update the release
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,3 +31,16 @@ jobs:
             *.snap
             *.comp
           if-no-files-found: error
+
+      - name: Publish latest build to a rolling release
+        # Only publish on merges/pushes to main, not on manual branch runs.
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build
+          files: |
+            *.snap
+            *.comp
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
