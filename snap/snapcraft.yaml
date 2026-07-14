@@ -211,6 +211,42 @@ parts:
       - libgomp1
     organize:
       "*": (component/llamacpp-cuda)
+
+  # Jetson uses a from-source CUDA build because the prebuilt cuda12.9 arm64
+  # binaries above target discrete-GPU ARM servers (SBSA) and fail on Jetson's
+  # integrated Tegra GPU. This builds against the Jetson CUDA 12.6 toolkit for
+  # the Orin Ampere GPU (compute capability 8.7).
+  llamacpp-jetson:
+    source: https://github.com/ggml-org/llama.cpp.git
+    source-depth: 1
+    plugin: cmake
+    build-packages:
+      - on arm64:
+        - cuda-nvcc-12-6
+        - cuda-cudart-dev-12-6
+        - libcublas-dev-12-6
+    cmake-parameters:
+      - -DGGML_CUDA=ON
+      - -DGGML_BACKEND_DL=ON
+      - -DCMAKE_CUDA_COMPILER=/usr/local/cuda-12.6/bin/nvcc
+      # Jetson Orin uses NVIDIA Ampere GPU compute capability 8.7.
+      - -DCMAKE_CUDA_ARCHITECTURES=87
+    stage-packages:
+      - on arm64:
+        - cuda-cudart-12-6
+        - libcublas-12-6
+        - libgomp1
+        - nvidia-l4t-cuda
+    override-build: |
+      if [ "$CRAFT_ARCH_BUILD_FOR" != "arm64" ]; then
+        echo "Skipping llamacpp-jetson build (Jetson/arm64 only) on $CRAFT_ARCH_BUILD_FOR"
+        exit 0
+      fi
+      craftctl default
+    organize:
+      # Move everything, including staged CUDA runtime libraries, to the component.
+      "*": (component/llamacpp-jetson)
+
   notice:
     plugin: nil
     source: NOTICE
@@ -255,6 +291,11 @@ components:
     type: standard
     summary: llama.cpp with CUDA backend
     description: LLM inference in C/C++
+
+  llamacpp-jetson:
+    type: standard
+    summary: llama.cpp with CUDA backend for NVIDIA Jetson
+    description: llama.cpp HTTP server built with CUDA support for NVIDIA Jetson Orin
 
 apps:
   qwen3-5:

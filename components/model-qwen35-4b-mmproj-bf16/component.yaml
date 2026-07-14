@@ -1,3 +1,0 @@
-environment:
-# To find the multimodal projector within the component's directory
-- MMPROJ_FILE=$COMPONENT/mmproj-BF16.gguf
