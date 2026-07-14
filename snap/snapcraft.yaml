@@ -122,12 +122,38 @@ parts:
     build-packages:
       - nvidia-utils-580
     override-build: |
+      set -e
       mkdir -p $CRAFT_PART_INSTALL/usr/bin
-      cp /usr/bin/nvidia-smi $CRAFT_PART_INSTALL/usr/bin/
-      
+
+      # nvidia-smi is shipped in /usr/bin on discrete-GPU/SBSA systems
+      # (nvidia-utils-*), but in /usr/sbin on NVIDIA Jetson
+      # (nvidia-tegra-drivers-*-nvml). Detect whichever is present.
+      nvidia_smi=$(command -v nvidia-smi || true)
+      if [ -z "$nvidia_smi" ]; then
+        for candidate in /usr/bin/nvidia-smi /usr/sbin/nvidia-smi; do
+          if [ -x "$candidate" ]; then
+            nvidia_smi=$candidate
+            break
+          fi
+        done
+      fi
+      if [ -z "$nvidia_smi" ]; then
+        echo "nvidia-smi not found" >&2
+        exit 1
+      fi
+      cp "$nvidia_smi" $CRAFT_PART_INSTALL/usr/bin/
+
+      # Copy the accompanying license from wherever the packaging placed it.
       license_dir=$CRAFT_PART_INSTALL/usr/share/doc/nvidia-utils-580/
       mkdir -p $license_dir
-      cp /usr/share/doc/nvidia-utils-580/copyright $license_dir/
+      for copyright in \
+        /usr/share/doc/nvidia-utils-580/copyright \
+        /usr/share/doc/nvidia-tegra/LICENSE.nvidia-smi; do
+        if [ -f "$copyright" ]; then
+          cp "$copyright" $license_dir/
+          break
+        fi
+      done
 
   webui:
     plugin: dump
