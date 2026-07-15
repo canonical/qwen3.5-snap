@@ -1,5 +1,5 @@
 #!/bin/bash
 
 set -euo pipefail
-engine="$(modelctl show-engine --format=json | jq -r .name)"
+engine="$(modelctl status --wait-for-components --format=json | jq -r .engine)"
 exec modelctl run -- "$SNAP/engines/$engine/server" "$@"

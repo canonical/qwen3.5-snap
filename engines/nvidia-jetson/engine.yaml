@@ -9,10 +9,8 @@ vendor: Canonical Ltd
 
 devices:
   allof:
-    - type: gpu
-      vendor-id: 0x10de # Nvidia Corporation
+    - vendor-id: 0x10de # Nvidia Corporation
       device-id: 0x229E # Jetson Orin Nano (integrated Tegra GPU)
-  anyof:
     - type: cpu
       architecture: arm64
 
