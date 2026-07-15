@@ -10,6 +10,7 @@ Before starting, install the necessary [drivers](https://documentation.ubuntu.co
 |--------------|--------------|-------------|
 | cpu | amd64, arm64 | Optimized for several CPU variants (x86, armv8, armv9) |
 | nvidia-gpu | amd64, arm64 | CUDA-enabled GPU acceleration |
+| nvidia-jetson | arm64 | CUDA-enabled GPU acceleration for NVIDIA Jetson devices |
 
 #### Install
 ```
