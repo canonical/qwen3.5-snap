@@ -1,0 +1,33 @@
+id: 9b-q4-k-m-gguf
+name: 9b
+
+description: |
+  Qwen 3.5 9B, Q4_K_M GGUF quantization, with multimodal (vision) projection
+  weights.
+model-card-url: https://huggingface.co/unsloth/Qwen3.5-9B-GGUF
+quantization: Q4_K_M
+
+disk-size: 5680M
+
+capabilities:
+  - text
+  - vision
+  - thinking
+  - tools
+
+components:
+  - model-q4-k-m-gguf-1-of-2
+  - model-q4-k-m-gguf-2-of-2
+  - mmproj-9b-q4-k-m
+
+environment:
+  - SHARDS_DIR=/tmp/qwen-3-5-9b-q4-k-m-shards
+  - MODEL_FILE=$SHARDS_DIR/Qwen3.5-9B-Q4_K_M-00001-of-00002.gguf
+  - MMPROJ_FILE=$SNAP_COMPONENTS/mmproj-9b-q4-k-m/mmproj-BF16.gguf
+  - MODEL_NAME=qwen-3-5-9b-q4-k-m
+
+layout:
+  $SHARDS_DIR/Qwen3.5-9B-Q4_K_M-00001-of-00002.gguf:
+    symlink: $SNAP_COMPONENTS/model-q4-k-m-gguf-1-of-2/Qwen3.5-9B-Q4_K_M-00001-of-00002.gguf
+  $SHARDS_DIR/Qwen3.5-9B-Q4_K_M-00002-of-00002.gguf:
+    symlink: $SNAP_COMPONENTS/model-q4-k-m-gguf-2-of-2/Qwen3.5-9B-Q4_K_M-00002-of-00002.gguf

@@ -1,18 +1,43 @@
-name: qwen3-5-jetson
+name: qwen3-5
 base: core24
-version: 'v1'
-summary: Qwen 3.5 inference snap for Jetson Orin Nano
+summary: Qwen 3.5 inference snap
 description: |
-  Inference snap for Qwen 3.5 4B using a CUDA-enabled llama.cpp backend
-  for NVIDIA Jetson Orin Nano.
+  This is an inference snap that lets you run Qwen 3.5, a multimodal
+  instruction-tuned model from Qwen with vision capabilities.
+  
+  Before you start, make sure to have the necessary drivers installed on the host:
+  https://documentation.ubuntu.com/inference-snaps/how-to/install-drivers/
+  
+  **Install:**
+  
+  `sudo snap install qwen3-5`
+  
+  **Get help:**
+  
+  `qwen3-5 --help`
+  
+  **Licensing:**
+  
+  The Qwen 3.5 model is provided by Qwen under the Apache 2.0 license.
 
-grade: devel
+  The licenses of all bundled software can be found inside the snap at `/snap/qwen3-5/current/usr/share/doc`.
+
+website: https://documentation.ubuntu.com/inference-snaps
+source-code: https://github.com/canonical/qwen3.5-snap
+issues: https://github.com/canonical/inference-snaps/issues
+
+adopt-info: version
+
+grade: stable
 confinement: strict
+compression: lzo
+
+assumes:
+  - snapd2.68 # for components support
 
 platforms:
+  amd64:
   arm64:
-    build-on: [arm64]
-    build-for: [arm64]
 
 package-repositories:
   - type: apt
@@ -39,10 +64,13 @@ package-repositories:
     suites: [r36.4]
     components: [main]
 
+plugs:
+  # To allow side-loading models into server (root daemon) from user home directory
+  home:
+    read: all
+
 environment:
-  # Set path to snap components
   SNAP_COMPONENTS: /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION
-  # To find shared libraries that are staged and moved to components
   ARCH_TRIPLET: $CRAFT_ARCH_TRIPLET_BUILD_FOR
 
 hooks:
@@ -55,50 +83,57 @@ hooks:
     plugs: *install-plugs
 
 parts:
-  component-local-files:
-    plugin: dump
-    source: components
-    organize:
-      "llama-cpp-cuda": (component/llama-cpp-cuda)
-      "model-qwen35-4b-ud-q4-k-xl": (component/model-qwen35-4b-ud-q4-k-xl)
-      "model-qwen35-4b-mmproj-bf16": (component/model-qwen35-4b-mmproj-bf16)
-
-  model-qwen35-4b-ud-q4-k-xl:
-    source: https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-UD-Q4_K_XL.gguf
-    source-type: file
-    plugin: dump
-    organize:
-      "Qwen3.5-4B-UD-Q4_K_XL.gguf": (component/model-qwen35-4b-ud-q4-k-xl)/Qwen3.5-4B-UD-Q4_K_XL.gguf
-
-  model-qwen35-4b-mmproj-bf16:
-    source: https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/mmproj-BF16.gguf
-    source-type: file
-    plugin: dump
-    organize:
-      "mmproj-BF16.gguf": (component/model-qwen35-4b-mmproj-bf16)/mmproj-BF16.gguf
-
-  llama-cpp-cuda:
-    source: https://github.com/ggml-org/llama.cpp.git
-    source-depth: 1
-    plugin: cmake
+  version:
+    after: [cli]
+    plugin: nil
+    source: . # To regenerate the git hash on every change
     build-packages:
-      - cuda-nvcc-12-6
-      - cuda-cudart-dev-12-6
-      - libcublas-dev-12-6
-    cmake-parameters:
-      - -DGGML_CUDA=ON
-      - -DGGML_BACKEND_DL=ON
-      - -DCMAKE_CUDA_COMPILER=/usr/local/cuda-12.6/bin/nvcc
-      # Jetson Orin uses NVIDIA Ampere GPU compute capability 8.7.
-      - -DCMAKE_CUDA_ARCHITECTURES=87
+      - jq
+      - git
+    override-pull: |
+      # Do nothing. This significantly reduces build time when sourcing large files.
+    override-build: |
+      set -eo pipefail
+      cli_version=$($CRAFT_STAGE/bin/modelctl version --format=json | jq .cli --raw-output)
+      git_hash=$(git -C "$SNAPCRAFT_PROJECT_DIR" describe --always)
+      craftctl set version="${cli_version#v}+${git_hash}"
+
+  cli:
+    source:
+      - on amd64: https://github.com/canonical/inference-snaps-cli/releases/download/v2.0.0-beta.7/inference-snaps-cli-linux-amd64.tar.xz
+      - on arm64: https://github.com/canonical/inference-snaps-cli/releases/download/v2.0.0-beta.7/inference-snaps-cli-linux-arm64.tar.xz
+    plugin: dump
+    override-build: |
+
+      # For tab completion
+      ln --symbolic ./modelctl bin/qwen3-5
+
+      craftctl default
+    
+  cli-dependencies:
+    plugin: nil
     stage-packages:
-      - cuda-cudart-12-6
-      - libcublas-12-6
-      - libgomp1
-      - nvidia-l4t-cuda
+      - pciutils # lspci
+
+  # Used for NVIDIA vRAM and CUDA Capability detection.
+  # Only the binary is included to avoid staging libraries, which should instead be provided by the host through the opengl interface.
+  cli-nvidia-smi:
+    plugin: nil
+    build-packages:
+      - nvidia-utils-580
+    override-build: |
+      mkdir -p $CRAFT_PART_INSTALL/usr/bin
+      cp /usr/bin/nvidia-smi $CRAFT_PART_INSTALL/usr/bin/
+      
+      license_dir=$CRAFT_PART_INSTALL/usr/share/doc/nvidia-utils-580/
+      mkdir -p $license_dir
+      cp /usr/share/doc/nvidia-utils-580/copyright $license_dir/
+
+  webui:
+    plugin: dump
+    source: https://github.com/canonical/inference-snaps-webui/releases/download/v1.0.0/inference-snaps-webui.tar.xz
     organize:
-      # Move everything, including staged CUDA runtime libraries, to the runtime component.
-      "*": (component/llama-cpp-cuda)
+      "*": webui/
 
   engines:
     source: engines
@@ -117,58 +152,119 @@ parts:
     plugin: dump
     organize:
       "*": runtimes/
-
-  cli:
-    source:
-      - on amd64: https://github.com/canonical/inference-snaps-cli/releases/download/v2.0.0-beta.4/inference-snaps-cli-linux-amd64.tar.xz
-      - on arm64: https://github.com/canonical/inference-snaps-cli/releases/download/v2.0.0-beta.4/inference-snaps-cli-linux-arm64.tar.xz
-    plugin: dump
-    override-build: |
-      # For tab completion
-      ln --symbolic ./modelctl bin/qwen3-5-jetson
-
-      craftctl default
-    
-  cli-dependencies:
-    plugin: nil
-    stage-packages:
-      - pciutils # lspci
-      - clinfo # used for Intel GPU vRAM detection. It depends on intel-opencl-icd
-
+  
   scripts:
     source: scripts
     plugin: dump
     stage-packages:
-      - jq # used in server.sh
+      - jq
     organize:
       "server.sh": bin/
+      "server-webui.sh": bin/
 
+  local-component-files:
+     # Use the cmake plugin instead of "dump" to prevent unwanted copies
+     # See https://github.com/canonical/craft-parts/issues/1609
+    plugin: cmake
+    source: components
+    override-build: |
+      cp -rf --archive --link --no-dereference ${CRAFT_PART_SRC}/* ${CRAFT_PART_INSTALL}
+    organize:
+      "model-q4-k-xl-gguf/*": (component/model-q4-k-xl-gguf)
+      "mmproj-4b-q4-k-xl/*": (component/mmproj-4b-q4-k-xl)
+      "model-q4-k-m-gguf-1-of-2/*": (component/model-q4-k-m-gguf-1-of-2)
+      "model-q4-k-m-gguf-2-of-2/*": (component/model-q4-k-m-gguf-2-of-2)
+      "mmproj-9b-q4-k-m/*": (component/mmproj-9b-q4-k-m)
+    prime:
+      # Exclude everything not explicitly organized
+      - -*
+
+  llamacpp:
+    plugin: dump
+    source:
+      - on amd64: https://github.com/canonical/llama.cpp-builds/releases/download/b9611/llamacpp-amd64.tar.gz
+      - on arm64: https://github.com/canonical/llama.cpp-builds/releases/download/b9611/llamacpp-arm64.tar.gz
+    override-build: |
+      # Move license files to be included in the snap, not the component
+      mkdir -p $CRAFT_PRIME/usr/share/doc/
+      mv licenses $CRAFT_PRIME/usr/share/doc/llama.cpp
+
+      craftctl default
+    stage-packages:
+      - libgomp1
+    organize:
+      # move everything, including the staged packages
+      "*": (component/llamacpp)
+
+  llamacpp-cuda:
+    plugin: dump
+    source:
+      - on amd64: https://github.com/canonical/llama.cpp-builds/releases/download/b9611/llamacpp-amd64+cuda12.9.tar.gz
+      - on arm64: https://github.com/canonical/llama.cpp-builds/releases/download/b9611/llamacpp-arm64+cuda12.9.tar.gz
+    override-build: |
+      # Move license files to be included in the snap, not the component
+      mkdir -p $CRAFT_PRIME/usr/share/doc/
+      mv licenses $CRAFT_PRIME/usr/share/doc/llama.cpp-cuda
+
+      craftctl default
+    stage-packages:
+      - libgomp1
+    organize:
+      "*": (component/llamacpp-cuda)
+  notice:
+    plugin: nil
+    source: NOTICE
+    source-type: file
+    override-build: |
+      license_dir=$CRAFT_PART_INSTALL/usr/share/doc
+      mkdir -p $license_dir
+      cp NOTICE $license_dir/
+      cp $SNAPCRAFT_PROJECT_DIR/LICENSE $license_dir/
+      cp $SNAPCRAFT_PROJECT_DIR/LICENSE-qwen3.5 $license_dir/
 components:
-  model-qwen35-4b-ud-q4-k-xl:
+  model-q4-k-xl-gguf:
     type: standard
-    summary: Qwen 3.5 4B UD-Q4_K_XL GGUF
-    description: Quantized Qwen 3.5 4B model in GGUF format with UD-Q4_K_XL encoding
+    summary: Qwen 3.5 4B Q4_K_XL GGUF weights
+    description: Single-file GGUF weights for Qwen 3.5 4B (unsloth dynamic Q4_K_XL).
 
-  model-qwen35-4b-mmproj-bf16:
+  mmproj-4b-q4-k-xl:
     type: standard
     summary: Qwen 3.5 4B multimodal projector
-    description: Multimodal projector for Qwen 3.5 4B image inputs in GGUF format (BF16 precision)
+    description: BF16 multimodal projection weights for the Qwen 3.5 4B vision inputs.
 
-  llama-cpp-cuda:
+  model-q4-k-m-gguf-1-of-2: &model-9b
     type: standard
-    summary: CUDA-enabled llama.cpp HTTP server
-    description: llama.cpp HTTP server built with CUDA support for Jetson Orin Nano
+    summary: Qwen 3.5 9B Q4_K_M GGUF weights
+    description: GGUF shard of the Qwen 3.5 9B (Q4_K_M) weights.
+
+  model-q4-k-m-gguf-2-of-2:
+    <<: *model-9b
+    summary: Qwen 3.5 9B Q4_K_M GGUF weights (shard 2 of 2)
+
+  mmproj-9b-q4-k-m:
+    type: standard
+    summary: Qwen 3.5 9B multimodal projector
+    description: BF16 multimodal projection weights for the Qwen 3.5 9B vision inputs.
+
+  llamacpp:
+    type: standard
+    summary: llama.cpp using default CPU instruction sets
+    description: LLM inference in C/C++
+  
+  llamacpp-cuda:
+    type: standard
+    summary: llama.cpp with CUDA backend
+    description: LLM inference in C/C++
 
 apps:
-  qwen3-5-jetson:
+  qwen3-5:
     command: bin/modelctl
     completer: bin/snap-completer.bash
     plugs:
-      # For hardware detection
       - hardware-observe
       - opengl
-      # To access server over network socket
       - network
+      - desktop # To open the webui in the browser
     environment:
       ADDITIONAL_FEATURES: chat, webui
 
@@ -176,8 +272,13 @@ apps:
     command: bin/server.sh
     daemon: simple
     plugs:
-      # Needed for server app
       - network-bind
-      # For inference and when running some modelctl commands
       - hardware-observe
       - opengl
+      - home
+
+  server-webui:
+    command: bin/server-webui.sh
+    daemon: simple
+    plugs:
+      - network-bind
