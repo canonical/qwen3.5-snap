@@ -22,7 +22,7 @@ jobs:
       build-runner: |
         [
           ["amd64", "large", "noble", "self-hosted"],
-          ["arm64", "large", "noble", "self-hosted"]
+          ["self-hosted", "arm64", "noble"]
         ]
       build-init-script: 'download-models.sh'
       store-track: latest
