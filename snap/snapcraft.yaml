@@ -125,20 +125,29 @@ parts:
       # nvidia-smi ships in different packages per platform:
       #   - Discrete GPU / SBSA (amd64): nvidia-utils-* -> /usr/bin/nvidia-smi
       #   - NVIDIA Jetson (arm64): nvidia-l4t-nvml -> /usr/sbin/nvidia-smi
-      #     (from the jetson apt repos configured in package-repositories, so it
-      #     does not rely on any host-specific PPA and works regardless of the
-      #     build host).
+      # The Jetson package is NOT declared here on purpose: nvidia-l4t-nvml (and
+      # its Tegra dependency chain) can only be installed/configured on a real
+      # Jetson build host. Declaring it as a build-package would abort the whole
+      # snap build on any other arm64 builder, so it is installed best-effort in
+      # override-build below instead.
       - on amd64:
         - nvidia-utils-580
-      - on arm64:
-        - nvidia-l4t-nvml
     override-build: |
       set -e
       mkdir -p $CRAFT_PART_INSTALL/usr/bin
 
+      # On arm64 the Jetson nvidia-smi comes from nvidia-l4t-nvml (from the
+      # jetson apt repos configured in package-repositories). Install it
+      # best-effort: on a real Jetson builder it succeeds; on a non-Jetson
+      # arm64 host it fails harmlessly and we simply ship without nvidia-smi.
+      if [ "$CRAFT_ARCH_BUILD_FOR" = "arm64" ]; then
+        apt-get install --yes --no-install-recommends nvidia-l4t-nvml || \
+          echo "nvidia-l4t-nvml unavailable on this arm64 host; skipping nvidia-smi (expected on non-Jetson builders)"
+      fi
+
       # nvidia-smi is shipped in /usr/bin on discrete-GPU/SBSA systems
       # (nvidia-utils-*), but in /usr/sbin on NVIDIA Jetson (nvidia-l4t-nvml).
-      # Detect whichever the installed build-package provided.
+      # Detect whichever the installed package provided.
       nvidia_smi=$(command -v nvidia-smi || true)
       if [ -z "$nvidia_smi" ]; then
         for candidate in /usr/bin/nvidia-smi /usr/sbin/nvidia-smi; do
@@ -149,6 +158,13 @@ parts:
         done
       fi
       if [ -z "$nvidia_smi" ]; then
+        # On arm64 this is expected on non-Jetson builders: continue so the snap
+        # still packs. On amd64 the nvidia-utils build-package guarantees it, so
+        # a missing binary there is a real error.
+        if [ "$CRAFT_ARCH_BUILD_FOR" = "arm64" ]; then
+          echo "nvidia-smi not found; continuing without it (non-Jetson arm64 build)"
+          exit 0
+        fi
         echo "nvidia-smi not found" >&2
         exit 1
       fi
