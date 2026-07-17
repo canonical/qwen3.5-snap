@@ -15,7 +15,6 @@ permissions:
   pull-requests: write
   actions: read
 
-# TODO: add a job for testing on Jetson Orin nano
 jobs:
   build-test:
     name: ${{ github.event.label.name }}
@@ -45,6 +44,17 @@ jobs:
                     "select-engine": "nvidia-gpu",
                     "test-chat-tps": true,
                     "expected-tps": 9.4,
+                    "test-image-prompt": true
+          },
+          {
+                    "job-queue": "nvidia-jetson-orin-nano",
+                    "provision-data": "urls: [https://tel-image-cache.canonical.com/cdimage/nvidia-tegra/ubuntu-server/jammy/daily-preinstalled/manual/jammy-preinstalled-server-arm64+tegra-jetson.img.xz]
+                                        preset: JetsonClassic
+                                        preset_kwargs:
+                                          boot_device: nvme",
+                    "select-engine": "nvidia-jetson",
+                    "test-chat-tps": true,
+                    "expected-tps": 9.0,
                     "test-image-prompt": true
           }
         ]
