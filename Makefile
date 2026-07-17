@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: download-models download-model setup-hf-cli
+.PHONY: download-models setup-hf-cli
 
 all: download-models
 
