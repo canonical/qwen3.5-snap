@@ -16,6 +16,13 @@ permissions:
   actions: read
 
 jobs:
+  pre-steps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add mask
+        run: |
+          echo "::add-mask::${{ secrets.SECRET_LOG_1 }}"
+          echo "::add-mask::${{ secrets.SECRET_LOG_2 }}"
   build-test:
     name: ${{ github.event.label.name }}
     uses: canonical/inference-snaps-dev/.github/workflows/reuse-pr-build-test.yaml@v2
