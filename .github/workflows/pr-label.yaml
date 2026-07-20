@@ -16,13 +16,6 @@ permissions:
   actions: read
 
 jobs:
-  pre-steps:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Add mask
-        run: |
-          echo "::add-mask::${{ secrets.SECRET_LOG_1 }}"
-          echo "::add-mask::${{ secrets.SECRET_LOG_2 }}"
   build-test:
     name: ${{ github.event.label.name }}
     uses: canonical/inference-snaps-dev/.github/workflows/reuse-pr-build-test.yaml@secrets-management
@@ -34,7 +27,6 @@ jobs:
           ["amd64", "large", "noble", "self-hosted"],
           ["arm64", "noble", "self-hosted"]
         ]
-      # TODO: add tests for jetson orin nano
       test-jobs-matrix: |
         [
           {
@@ -51,6 +43,14 @@ jobs:
                     "select-engine": "nvidia-gpu",
                     "test-chat-tps": true,
                     "expected-tps": 9.4,
+                    "test-image-prompt": true
+          },
+          {
+                    "job-queue": "nvidia-jetson-orin-nano",
+                    "provision-data": "{urls: [https://tel-image-cache.canonical.com/cdimage/nvidia-tegra/ubuntu-server/jammy/daily-preinstalled/manual/jammy-preinstalled-server-arm64+tegra-jetson.img.xz], preset: JetsonClassic, preset_kwargs: {boot_device: nvme}}",
+                    "select-engine": "nvidia-jetson",
+                    "test-chat-tps": true,
+                    "expected-tps": 9.0,
                     "test-image-prompt": true
           }
         ]
