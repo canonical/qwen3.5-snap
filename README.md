@@ -42,6 +42,7 @@ qwen3-5 --help
 Clone the repo:
 ```shell
 git clone https://github.com/canonical/qwen3.5-snap
+cd qwen3.5-snap
 ```
 
 Initialize the development environment:
