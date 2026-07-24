@@ -48,7 +48,7 @@ jobs:
           {
                     "job-queue": "nvidia-jetson-orin-nano",
                     "provision-data": "{urls: [https://tel-image-cache.canonical.com/cdimage/nvidia-tegra/ubuntu-server/jammy/daily-preinstalled/manual/jammy-preinstalled-server-arm64+tegra-jetson.img.xz], preset: JetsonClassic, preset_kwargs: {boot_device: nvme}}",
-                    "select-engine": "nvidia-jetson",
+                    "select-engine": "nvidia-jetson-orin",
                     "test-chat-tps": true,
                     "expected-tps": 9.0,
                     "test-image-prompt": true

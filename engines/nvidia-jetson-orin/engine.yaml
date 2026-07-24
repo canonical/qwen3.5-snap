@@ -1,4 +1,4 @@
-name: nvidia-jetson
+name: nvidia-jetson-orin
 summary: CUDA-optimized for NVIDIA Jetson Orin
 description: |
   This engine uses a from-source CUDA build of llama.cpp tuned for the
@@ -14,7 +14,7 @@ devices:
     - type: cpu
       architecture: arm64
 
-runtime: llamacpp-jetson
+runtime: llamacpp-jetson-orin
 
 model:
   default: 4b-q4-k-xl-gguf

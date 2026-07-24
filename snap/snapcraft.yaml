@@ -200,7 +200,7 @@ parts:
     organize:
       "*": (component/llamacpp-cuda)
 
-  llamacpp-jetson:
+  llamacpp-jetson-orin:
     source: https://github.com/ggml-org/llama.cpp.git
     source-depth: 1
     plugin: cmake
@@ -223,13 +223,13 @@ parts:
         - nvidia-l4t-cuda
     override-build: |
       if [ "$CRAFT_ARCH_BUILD_FOR" != "arm64" ]; then
-        echo "Skipping llamacpp-jetson build (Jetson/arm64 only) on $CRAFT_ARCH_BUILD_FOR"
+        echo "Skipping llamacpp-jetson-orin build (Jetson/arm64 only) on $CRAFT_ARCH_BUILD_FOR"
         exit 0
       fi
       craftctl default
     organize:
       # Move everything, including staged CUDA runtime libraries, to the component.
-      "*": (component/llamacpp-jetson)
+      "*": (component/llamacpp-jetson-orin)
 
   notice:
     plugin: nil
@@ -276,7 +276,7 @@ components:
     summary: llama.cpp with CUDA backend
     description: LLM inference in C/C++
 
-  llamacpp-jetson:
+  llamacpp-jetson-orin:
     type: standard
     summary: llama.cpp with CUDA backend for NVIDIA Jetson
     description: llama.cpp HTTP server built with CUDA support for NVIDIA Jetson Orin
