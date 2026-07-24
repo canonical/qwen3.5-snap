@@ -39,16 +39,18 @@ qwen3-5 --help
 
 ## Build and install from source
 
-Clone this repo with its submodules:
+Clone the repo:
 ```shell
-git clone --recurse-submodules https://github.com/canonical/qwen3.5-snap
+git clone https://github.com/canonical/qwen3.5-snap
 ```
 
-Prepare the required models by running `make download-models`.
-
-Build the snap and its component:
+Initialize the development environment:
 ```shell
-snapcraft pack -v
+make init
 ```
 
-Refer to the `./dev` directory for additional development tools.
+Build and install snap:
+```shell
+make build
+make install
+```
