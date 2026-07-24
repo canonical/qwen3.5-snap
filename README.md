@@ -1,7 +1,33 @@
-# Qwen 3.5 Jetson snap
+# Qwen 3.5 inference snap
+[![qwen3-5](https://snapcraft.io/qwen3-5/badge.svg)](https://snapcraft.io/qwen3-5)
 
-Core24 inference snap for Qwen 3.5 4B on NVIDIA Jetson Orin Nano using a
-CUDA-enabled llama.cpp backend.
+Install [Qwen 3.5](https://qwen.ai/blog?id=qwen3.5), optimized directly for your hardware.
+This package deploys a high-performance runtime for local inference across arm and x86 platforms. It runs efficiently on pure CPU or leverages CUDA-enabled NVIDIA GPU acceleration.
+
+Before starting, install the necessary [drivers](https://documentation.ubuntu.com/inference-snaps/how-to/setup/drivers/) for your accelerator.
+
+| Engine | Arch | Description |
+|--------------|--------------|-------------|
+| cpu | amd64, arm64 | Optimized for several CPU variants (x86, armv8, armv9) |
+| nvidia-gpu | amd64, arm64 | CUDA-enabled GPU acceleration |
+| nvidia-jetson-orin | arm64 | CUDA-enabled GPU acceleration for NVIDIA Jetson Orin devices |
+
+#### Install
+```
+sudo snap install qwen3-5
+```
+#### Use
+```
+qwen3-5 --help
+```
+
+#### Default configurations
+| Key | Value |
+|-----|-------|
+| http.port | 8352 |
+| http.host | 127.0.0.1 |
+| webui.http.port | 8353 |
+| webui.http.host | 127.0.0.1 |
 
 ## Resources
 
@@ -11,66 +37,18 @@ CUDA-enabled llama.cpp backend.
 
 🐛 **[Issues](https://github.com/canonical/inference-snaps/issues)**, report bugs and request features
 
-The model component downloads:
+## Build and install from source
 
-```text
-https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-UD-Q4_K_XL.gguf
-https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/mmproj-BF16.gguf
-```
-
-## Build
-
-Build this snap on an arm64 Jetson Orin Nano, or on an equivalent arm64 build
-host with CUDA toolkit packages available:
-
+Clone this repo with its submodules:
 ```shell
-snapcraft pack --destructive-mode
+git clone --recurse-submodules https://github.com/canonical/qwen3.5-snap
 ```
 
-The llama.cpp component is built with `GGML_CUDA=ON` and
-`CMAKE_CUDA_ARCHITECTURES=87`, matching Jetson Orin's NVIDIA Ampere GPU compute
-capability.
+Prepare the required models by running `make download-models`.
 
-## Local install
-
+Build the snap and its component:
 ```shell
-sudo snap install --dangerous qwen3-5-jetson_*.snap
-sudo snap install --dangerous qwen3-5-jetson+llama-cpp-cuda.comp
-sudo snap install --dangerous qwen3-5-jetson+model-qwen35-4b-ud-q4-k-xl.comp
-sudo snap install --dangerous qwen3-5-jetson+model-qwen35-4b-mmproj-bf16.comp
-sudo snap connect qwen3-5-jetson:hardware-observe
-sudo snap connect qwen3-5-jetson:opengl
-sudo qwen3-5-jetson use-engine --auto
-sudo snap start qwen3-5-jetson
+snapcraft pack -v
 ```
 
-The engine is initially marked `devel`. If automatic selection skips it, select
-it explicitly:
-
-```shell
-sudo qwen3-5-jetson use-engine jetson-orin-nano-cuda
-```
-
-Check logs for CUDA backend initialization:
-
-```shell
-snap logs qwen3-5-jetson
-```
-
-The service runs as root, which is required on the tested Jetson Orin Nano image
-because `/dev/nvmap` and `/dev/nvhost-*` are owned by `root:root` with mode
-`0600`.
-
-## Jetson engine selection
-
-The initial engine manifest uses `arm64` CPU detection as the baseline selector
-because Jetson Orin Nano exposes an integrated NVIDIA GPU rather than a typical
-PCI GPU. After installing on the Jetson, inspect the detected machine shape:
-
-```shell
-qwen3-5-jetson show-machine --format=json
-```
-
-If the integrated GPU is reported with a supported NVIDIA GPU manifest shape,
-tighten `engines/jetson-orin-nano-cuda/engine.yaml` to require NVIDIA compute
-capability `>=8.7`.
+Refer to the `./dev` directory for additional development tools.

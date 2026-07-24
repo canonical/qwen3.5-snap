@@ -1,0 +1,63 @@
+# This workflow is used to build and test pull requests when specific labels are applied.
+# Supported labels: trigger-build, trigger-tests
+name: PR Label
+
+on:
+  pull_request:
+    types: [ labeled ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+
+jobs:
+  build-test:
+    name: ${{ github.event.label.name }}
+    uses: canonical/inference-snaps-dev/.github/workflows/reuse-pr-build-test.yaml@secrets-management
+    with:
+      trigger-label: ${{ github.event.label.name }}
+      pr-number: "${{ github.event.pull_request.number }}"
+      build-runner: |
+        [
+          ["amd64", "large", "noble", "self-hosted"],
+          ["arm64", "noble", "self-hosted"]
+        ]
+      test-jobs-matrix: |
+        [
+          {
+                    "job-queue": "maas-systemtests-amd64",
+                    "provision-data": "distro: noble",
+                    "select-engine": "cpu",
+                    "test-chat-tps": true,
+                    "test-image-prompt": true
+          },
+          {
+                    "job-queue": "anbox-nvidia-amd64",
+                    "provision-data": "distro: noble",
+                    "install-nvidia-driver-version": 595,
+                    "select-engine": "nvidia-gpu",
+                    "test-chat-tps": true,
+                    "expected-tps": 9.4,
+                    "test-image-prompt": true
+          },
+          {
+                    "job-queue": "nvidia-jetson-orin-nano",
+                    "provision-data": "{urls: [https://tel-image-cache.canonical.com/cdimage/nvidia-tegra/ubuntu-server/jammy/daily-preinstalled/manual/jammy-preinstalled-server-arm64+tegra-jetson.img.xz], preset: JetsonClassic, preset_kwargs: {boot_device: nvme}}",
+                    "select-engine": "nvidia-jetson-orin",
+                    "test-chat-tps": true,
+                    "expected-tps": 9.0,
+                    "test-image-prompt": true
+          }
+        ]
+      snap-name: qwen3-5
+      testflinger-client-id: ${{ vars.TESTFLINGER_CLIENT_ID }}
+    secrets:
+      store-credentials: ${{ secrets.STORE_LOGIN_PR }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      testflinger-secret-key: ${{ secrets.TESTFLINGER_SECRET_KEY }}
+      logs-secret: ${{ secrets.LOGS_SECRET }}

@@ -1,0 +1,26 @@
+name: cpu
+summary: Optimized for various CPUs
+description: |
+  This engine uses llama.cpp.
+
+  It is optimized for both amd64 and arm64 CPU architectures, for a wide range
+  of architecture variants.
+vendor: Canonical Ltd
+
+devices:
+  anyof:
+    - type: cpu
+      architecture: amd64
+    - type: cpu
+      architecture: arm64
+
+runtime: llamacpp
+
+model:
+  default: 4b-q4-k-xl-gguf
+  options:
+    - 4b-q4-k-xl-gguf
+    - 9b-q4-k-m-gguf
+
+configurations:
+  sleep-idle-seconds: 600

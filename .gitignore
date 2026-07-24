@@ -1,15 +1,15 @@
-# Snap artifacts
-partitions/
-parts/
-stage/
-prime/
 *.snap
 *.comp
-*.assert
-squashfs-root
-
-# snap try trees
-try-root/
-
-# Weights
+parts/
+prime/
+stage/
+partitions/
 *.gguf
+.venv/
+.workshop.lock
+# Snapcraft build state
+.craft/
+components/*
+
+.staging/
+

@@ -1,0 +1,25 @@
+name: nvidia-jetson-orin
+summary: CUDA-optimized for NVIDIA Jetson Orin
+description: |
+  This engine uses a from-source CUDA build of llama.cpp tuned for the
+  NVIDIA Jetson Orin platform (integrated Tegra GPU).
+
+  It supports the arm64 CPU architecture.
+vendor: Canonical Ltd
+
+devices:
+  allof:
+    - vendor-id: 0x10de # Nvidia Corporation
+      device-id: 0x229E # Jetson Orin Nano (integrated Tegra GPU)
+    - type: cpu
+      architecture: arm64
+
+runtime: llamacpp-jetson-orin
+
+model:
+  default: 4b-q4-k-xl-gguf
+  options:
+    - 4b-q4-k-xl-gguf
+
+configurations:
+  sleep-idle-seconds: 600
