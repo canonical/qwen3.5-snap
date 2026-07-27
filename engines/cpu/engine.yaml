@@ -17,10 +17,10 @@ devices:
 runtime: llamacpp
 
 model:
-  default: 4b-q4-k-xl-gguf
+  default: qwen3.5-4b
   options:
-    - 4b-q4-k-xl-gguf
-    - 9b-q4-k-m-gguf
+    - qwen3.5-4b
+    - qwen3.5-9b
 
 configurations:
   sleep-idle-seconds: 600

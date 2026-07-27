@@ -1,5 +1,4 @@
-id: 4b-q4-k-xl-gguf
-name: 4b
+name: qwen3.5-4b
 
 description: |
   Qwen 3.5 4B, Q4_K_XL GGUF quantization, with multimodal (vision) projection
