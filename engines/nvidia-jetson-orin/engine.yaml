@@ -17,9 +17,9 @@ devices:
 runtime: llamacpp-jetson-orin
 
 model:
-  default: 4b-q4-k-xl-gguf
+  default: qwen3.5-4b
   options:
-    - 4b-q4-k-xl-gguf
+    - qwen3.5-4b
 
 configurations:
   sleep-idle-seconds: 600

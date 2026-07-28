@@ -1,5 +1,4 @@
-id: 9b-q4-k-m-gguf
-name: 9b
+name: qwen3.5-9b
 
 description: |
   Qwen 3.5 9B, Q4_K_M GGUF quantization, with multimodal (vision) projection
