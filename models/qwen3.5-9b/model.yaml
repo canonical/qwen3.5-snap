@@ -1,4 +1,5 @@
 name: qwen3.5-9b
+alias: 9b
 
 description: |
   Qwen 3.5 9B, Q4_K_M GGUF quantization, with multimodal (vision) projection

@@ -19,7 +19,10 @@ runtime: llamacpp-jetson-orin
 model:
   default: qwen3.5-4b
   options:
+    - qwen3.5-0.8b
+    - qwen3.5-2b
     - qwen3.5-4b
+    - qwen3.5-9b
 
 configurations:
   sleep-idle-seconds: 600
