@@ -16,10 +16,10 @@ capabilities:
   - tools
 
 components:
-  - model-q4-k-xl-gguf
+  - model-4b-q4-k-xl-gguf
   - mmproj-4b-q4-k-xl
 
 environment:
-  - MODEL_FILE=$SNAP_COMPONENTS/model-q4-k-xl-gguf/Qwen3.5-4B-UD-Q4_K_XL.gguf
+  - MODEL_FILE=$SNAP_COMPONENTS/model-4b-q4-k-xl-gguf/Qwen3.5-4B-UD-Q4_K_XL.gguf
   - MMPROJ_FILE=$SNAP_COMPONENTS/mmproj-4b-q4-k-xl/mmproj-BF16.gguf
   - MODEL_NAME=qwen-3-5-4b-q4-k-xl

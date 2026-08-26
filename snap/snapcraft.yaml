@@ -162,10 +162,10 @@ parts:
       "mmproj-0-8b-q4-k-m/*": (component/mmproj-0-8b-q4-k-m)
       "model-2b-q4-k-m-gguf/*": (component/model-2b-q4-k-m-gguf)
       "mmproj-2b-q4-k-m/*": (component/mmproj-2b-q4-k-m)
-      "model-q4-k-xl-gguf/*": (component/model-q4-k-xl-gguf)
+      "model-4b-q4-k-xl-gguf/*": (component/model-4b-q4-k-xl-gguf)
       "mmproj-4b-q4-k-xl/*": (component/mmproj-4b-q4-k-xl)
-      "model-q4-k-m-gguf-1-of-2/*": (component/model-q4-k-m-gguf-1-of-2)
-      "model-q4-k-m-gguf-2-of-2/*": (component/model-q4-k-m-gguf-2-of-2)
+      "model-9b-q4-k-m-gguf-1-of-2/*": (component/model-9b-q4-k-m-gguf-1-of-2)
+      "model-9b-q4-k-m-gguf-2-of-2/*": (component/model-9b-q4-k-m-gguf-2-of-2)
       "mmproj-9b-q4-k-m/*": (component/mmproj-9b-q4-k-m)
       "model-35b-a3b-q4-k-m-gguf-1-of-5/*": (component/model-35b-a3b-q4-k-m-gguf-1-of-5)
       "model-35b-a3b-q4-k-m-gguf-2-of-5/*": (component/model-35b-a3b-q4-k-m-gguf-2-of-5)
@@ -272,7 +272,7 @@ components:
     summary: Qwen 3.5 2B multimodal projector
     description: BF16 multimodal projection weights for the Qwen 3.5 2B vision inputs.
 
-  model-q4-k-xl-gguf:
+  model-4b-q4-k-xl-gguf:
     type: standard
     summary: Qwen 3.5 4B Q4_K_XL GGUF weights
     description: Single-file GGUF weights for Qwen 3.5 4B (unsloth dynamic Q4_K_XL).
@@ -282,12 +282,12 @@ components:
     summary: Qwen 3.5 4B multimodal projector
     description: BF16 multimodal projection weights for the Qwen 3.5 4B vision inputs.
 
-  model-q4-k-m-gguf-1-of-2: &model-9b
+  model-9b-q4-k-m-gguf-1-of-2: &model-9b
     type: standard
     summary: Qwen 3.5 9B Q4_K_M GGUF weights
     description: GGUF shard of the Qwen 3.5 9B (Q4_K_M) weights.
 
-  model-q4-k-m-gguf-2-of-2:
+  model-9b-q4-k-m-gguf-2-of-2:
     <<: *model-9b
     summary: Qwen 3.5 9B Q4_K_M GGUF weights (shard 2 of 2)
 
