@@ -21,8 +21,8 @@ jobs:
     with:
       build-runner: |
         [
-          ["amd64", "xlarge", "noble", "self-hosted"],
-          ["arm64", "xlarge", "noble", "self-hosted"]
+          ["amd64", "large-extra", "noble", "self-hosted"],
+          ["arm64", "large-extra", "noble", "self-hosted"]
         ]
       smoke-test-runner: |
         [
