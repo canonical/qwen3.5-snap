@@ -3,6 +3,7 @@
 port="$(modelctl get http.port)"
 host="$(modelctl get http.host)"
 sleep_idle_seconds="$(modelctl get sleep-idle-seconds)"
+min_context_size="$(modelctl get min-context-size)"
 
 extra_args=()
 
@@ -26,7 +27,7 @@ exec llama-server \
   --port "$port" \
   --no-warmup \
   --sleep-idle-seconds "$sleep_idle_seconds" \
-  --ctx-size 4096 \
+  --fit-ctx "$min_context_size" \
   --parallel 1 \
   --batch-size 512 \
   --ubatch-size 128 \
