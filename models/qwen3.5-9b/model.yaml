@@ -15,8 +15,8 @@ capabilities:
   - tools
 
 components:
-  - model-q4-k-m-gguf-1-of-2
-  - model-q4-k-m-gguf-2-of-2
+  - model-9b-q4-k-m-gguf-1-of-2
+  - model-9b-q4-k-m-gguf-2-of-2
   - mmproj-9b-q4-k-m
 
 environment:
@@ -27,6 +27,6 @@ environment:
 
 layout:
   $SHARDS_DIR/Qwen3.5-9B-Q4_K_M-00001-of-00002.gguf:
-    symlink: $SNAP_COMPONENTS/model-q4-k-m-gguf-1-of-2/Qwen3.5-9B-Q4_K_M-00001-of-00002.gguf
+    symlink: $SNAP_COMPONENTS/model-9b-q4-k-m-gguf-1-of-2/Qwen3.5-9B-Q4_K_M-00001-of-00002.gguf
   $SHARDS_DIR/Qwen3.5-9B-Q4_K_M-00002-of-00002.gguf:
-    symlink: $SNAP_COMPONENTS/model-q4-k-m-gguf-2-of-2/Qwen3.5-9B-Q4_K_M-00002-of-00002.gguf
+    symlink: $SNAP_COMPONENTS/model-9b-q4-k-m-gguf-2-of-2/Qwen3.5-9B-Q4_K_M-00002-of-00002.gguf

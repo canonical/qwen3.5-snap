@@ -1,0 +1,41 @@
+name: qwen3.5-35b-a3b
+
+description: |
+  Qwen 3.5 35B-A3B, Q4_K_M GGUF quantization, with multimodal (vision)
+  projection weights.
+model-card-url: https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF
+quantization: Q4_K_M
+
+disk-size: 22000M
+
+capabilities:
+  - text
+  - vision
+  - thinking
+  - tools
+
+components:
+  - model-35b-a3b-q4-k-m-gguf-1-of-5
+  - model-35b-a3b-q4-k-m-gguf-2-of-5
+  - model-35b-a3b-q4-k-m-gguf-3-of-5
+  - model-35b-a3b-q4-k-m-gguf-4-of-5
+  - model-35b-a3b-q4-k-m-gguf-5-of-5
+  - mmproj-35b-q4-k-m
+
+environment:
+  - SHARDS_DIR=/tmp/qwen-3-5-35b-a3b-q4-k-m-shards
+  - MODEL_FILE=$SHARDS_DIR/Qwen3.5-35B-A3B-Q4_K_M-00001-of-00005.gguf
+  - MMPROJ_FILE=$SNAP_COMPONENTS/mmproj-35b-q4-k-m/mmproj-BF16.gguf
+  - MODEL_NAME=qwen-3-5-35b-a3b-q4-k-m
+
+layout:
+  $SHARDS_DIR/Qwen3.5-35B-A3B-Q4_K_M-00001-of-00005.gguf:
+    symlink: $SNAP_COMPONENTS/model-35b-a3b-q4-k-m-gguf-1-of-5/Qwen3.5-35B-A3B-Q4_K_M-00001-of-00005.gguf
+  $SHARDS_DIR/Qwen3.5-35B-A3B-Q4_K_M-00002-of-00005.gguf:
+    symlink: $SNAP_COMPONENTS/model-35b-a3b-q4-k-m-gguf-2-of-5/Qwen3.5-35B-A3B-Q4_K_M-00002-of-00005.gguf
+  $SHARDS_DIR/Qwen3.5-35B-A3B-Q4_K_M-00003-of-00005.gguf:
+    symlink: $SNAP_COMPONENTS/model-35b-a3b-q4-k-m-gguf-3-of-5/Qwen3.5-35B-A3B-Q4_K_M-00003-of-00005.gguf
+  $SHARDS_DIR/Qwen3.5-35B-A3B-Q4_K_M-00004-of-00005.gguf:
+    symlink: $SNAP_COMPONENTS/model-35b-a3b-q4-k-m-gguf-4-of-5/Qwen3.5-35B-A3B-Q4_K_M-00004-of-00005.gguf
+  $SHARDS_DIR/Qwen3.5-35B-A3B-Q4_K_M-00005-of-00005.gguf:
+    symlink: $SNAP_COMPONENTS/model-35b-a3b-q4-k-m-gguf-5-of-5/Qwen3.5-35B-A3B-Q4_K_M-00005-of-00005.gguf

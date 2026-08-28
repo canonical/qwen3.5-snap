@@ -158,11 +158,21 @@ parts:
     override-build: |
       cp -rf --archive --link --no-dereference ${CRAFT_PART_SRC}/* ${CRAFT_PART_INSTALL}
     organize:
-      "model-q4-k-xl-gguf/*": (component/model-q4-k-xl-gguf)
+      "model-0-8b-q4-k-m-gguf/*": (component/model-0-8b-q4-k-m-gguf)
+      "mmproj-0-8b-q4-k-m/*": (component/mmproj-0-8b-q4-k-m)
+      "model-2b-q4-k-m-gguf/*": (component/model-2b-q4-k-m-gguf)
+      "mmproj-2b-q4-k-m/*": (component/mmproj-2b-q4-k-m)
+      "model-4b-q4-k-xl-gguf/*": (component/model-4b-q4-k-xl-gguf)
       "mmproj-4b-q4-k-xl/*": (component/mmproj-4b-q4-k-xl)
-      "model-q4-k-m-gguf-1-of-2/*": (component/model-q4-k-m-gguf-1-of-2)
-      "model-q4-k-m-gguf-2-of-2/*": (component/model-q4-k-m-gguf-2-of-2)
+      "model-9b-q4-k-m-gguf-1-of-2/*": (component/model-9b-q4-k-m-gguf-1-of-2)
+      "model-9b-q4-k-m-gguf-2-of-2/*": (component/model-9b-q4-k-m-gguf-2-of-2)
       "mmproj-9b-q4-k-m/*": (component/mmproj-9b-q4-k-m)
+      "model-35b-a3b-q4-k-m-gguf-1-of-5/*": (component/model-35b-a3b-q4-k-m-gguf-1-of-5)
+      "model-35b-a3b-q4-k-m-gguf-2-of-5/*": (component/model-35b-a3b-q4-k-m-gguf-2-of-5)
+      "model-35b-a3b-q4-k-m-gguf-3-of-5/*": (component/model-35b-a3b-q4-k-m-gguf-3-of-5)
+      "model-35b-a3b-q4-k-m-gguf-4-of-5/*": (component/model-35b-a3b-q4-k-m-gguf-4-of-5)
+      "model-35b-a3b-q4-k-m-gguf-5-of-5/*": (component/model-35b-a3b-q4-k-m-gguf-5-of-5)
+      "mmproj-35b-q4-k-m/*": (component/mmproj-35b-q4-k-m)
     prime:
       # Exclude everything not explicitly organized
       - -*
@@ -242,7 +252,27 @@ parts:
       cp $SNAPCRAFT_PROJECT_DIR/LICENSE $license_dir/
       cp $SNAPCRAFT_PROJECT_DIR/LICENSE-qwen3.5 $license_dir/
 components:
-  model-q4-k-xl-gguf:
+  model-0-8b-q4-k-m-gguf:
+    type: standard
+    summary: Qwen 3.5 0.8B Q4_K_M GGUF weights
+    description: Single-file GGUF weights for Qwen 3.5 0.8B (Q4_K_M).
+
+  mmproj-0-8b-q4-k-m:
+    type: standard
+    summary: Qwen 3.5 0.8B multimodal projector
+    description: BF16 multimodal projection weights for the Qwen 3.5 0.8B vision inputs.
+
+  model-2b-q4-k-m-gguf:
+    type: standard
+    summary: Qwen 3.5 2B Q4_K_M GGUF weights
+    description: Single-file GGUF weights for Qwen 3.5 2B (Q4_K_M).
+
+  mmproj-2b-q4-k-m:
+    type: standard
+    summary: Qwen 3.5 2B multimodal projector
+    description: BF16 multimodal projection weights for the Qwen 3.5 2B vision inputs.
+
+  model-4b-q4-k-xl-gguf:
     type: standard
     summary: Qwen 3.5 4B Q4_K_XL GGUF weights
     description: Single-file GGUF weights for Qwen 3.5 4B (unsloth dynamic Q4_K_XL).
@@ -252,19 +282,40 @@ components:
     summary: Qwen 3.5 4B multimodal projector
     description: BF16 multimodal projection weights for the Qwen 3.5 4B vision inputs.
 
-  model-q4-k-m-gguf-1-of-2: &model-9b
+  model-9b-q4-k-m-gguf-1-of-2: &model-9b
     type: standard
     summary: Qwen 3.5 9B Q4_K_M GGUF weights
     description: GGUF shard of the Qwen 3.5 9B (Q4_K_M) weights.
 
-  model-q4-k-m-gguf-2-of-2:
+  model-9b-q4-k-m-gguf-2-of-2:
     <<: *model-9b
-    summary: Qwen 3.5 9B Q4_K_M GGUF weights (shard 2 of 2)
 
   mmproj-9b-q4-k-m:
     type: standard
     summary: Qwen 3.5 9B multimodal projector
     description: BF16 multimodal projection weights for the Qwen 3.5 9B vision inputs.
+
+  model-35b-a3b-q4-k-m-gguf-1-of-5: &model-35b
+    type: standard
+    summary: Qwen 3.5 35B-A3B Q4_K_M GGUF weights
+    description: GGUF shard of the Qwen 3.5 35B-A3B (Q4_K_M) weights.
+
+  model-35b-a3b-q4-k-m-gguf-2-of-5:
+    <<: *model-35b
+
+  model-35b-a3b-q4-k-m-gguf-3-of-5:
+    <<: *model-35b
+
+  model-35b-a3b-q4-k-m-gguf-4-of-5:
+    <<: *model-35b
+
+  model-35b-a3b-q4-k-m-gguf-5-of-5:
+    <<: *model-35b
+
+  mmproj-35b-q4-k-m:
+    type: standard
+    summary: Qwen 3.5 35B-A3B multimodal projector
+    description: BF16 multimodal projection weights for the Qwen 3.5 35B-A3B vision inputs.
 
   llamacpp:
     type: standard

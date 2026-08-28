@@ -21,8 +21,13 @@ jobs:
     with:
       build-runner: |
         [
+          ["amd64", "2xlarge-extra", "noble", "self-hosted"],
+          ["arm64", "large-extra", "noble", "self-hosted"]
+        ]
+      smoke-test-runner: |
+        [
           ["amd64", "large", "noble", "self-hosted"],
-          ["self-hosted", "arm64", "noble"]
+          ["arm64", "large", "noble", "self-hosted"]
         ]
       store-track: latest
       snap-name: qwen3-5
