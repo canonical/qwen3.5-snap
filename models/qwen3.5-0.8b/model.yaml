@@ -1,5 +1,4 @@
 name: qwen3.5-0.8b
-alias: 0.8b
 
 description: |
   Qwen 3.5 0.8B, Q4_K_M GGUF quantization, with multimodal (vision) projection

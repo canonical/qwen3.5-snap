@@ -1,5 +1,4 @@
-name: qwen3.5-35b
-alias: 35b
+name: qwen3.5-35b-a3b
 
 description: |
   Qwen 3.5 35B-A3B, Q4_K_M GGUF quantization, with multimodal (vision)

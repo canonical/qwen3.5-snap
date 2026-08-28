@@ -289,7 +289,6 @@ components:
 
   model-9b-q4-k-m-gguf-2-of-2:
     <<: *model-9b
-    summary: Qwen 3.5 9B Q4_K_M GGUF weights (shard 2 of 2)
 
   mmproj-9b-q4-k-m:
     type: standard
@@ -303,19 +302,15 @@ components:
 
   model-35b-a3b-q4-k-m-gguf-2-of-5:
     <<: *model-35b
-    summary: Qwen 3.5 35B-A3B Q4_K_M GGUF weights (shard 2 of 5)
 
   model-35b-a3b-q4-k-m-gguf-3-of-5:
     <<: *model-35b
-    summary: Qwen 3.5 35B-A3B Q4_K_M GGUF weights (shard 3 of 5)
 
   model-35b-a3b-q4-k-m-gguf-4-of-5:
     <<: *model-35b
-    summary: Qwen 3.5 35B-A3B Q4_K_M GGUF weights (shard 4 of 5)
 
   model-35b-a3b-q4-k-m-gguf-5-of-5:
     <<: *model-35b
-    summary: Qwen 3.5 35B-A3B Q4_K_M GGUF weights (shard 5 of 5)
 
   mmproj-35b-q4-k-m:
     type: standard

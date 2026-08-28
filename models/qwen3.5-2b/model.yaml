@@ -1,5 +1,4 @@
 name: qwen3.5-2b
-alias: 2b
 
 description: |
   Qwen 3.5 2B, Q4_K_M GGUF quantization, with multimodal (vision) projection
