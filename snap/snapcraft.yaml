@@ -1,27 +1,39 @@
 name: qwen3-5
+title: Qwen 3.5
 base: core24
-summary: Qwen 3.5 inference snap
+summary: Local AI with Qwen 3.5 inference snap
 description: |
-  This is an inference snap that lets you run Qwen 3.5, a multimodal
-  instruction-tuned model from Qwen with vision capabilities.
-  
-  Before you start, make sure to have the necessary drivers installed on the host:
-  https://documentation.ubuntu.com/inference-snaps/how-to/install-drivers/
-  
+  Qwen 3.5 is a multimodal instruction-tuned model from Qwen with vision capabilities, optimized directly for your hardware. It runs efficiently on pure CPU or leverages CUDA-enabled NVIDIA GPU acceleration.
+
+  Use this snap to quickly install an optimized environment for local inference with Qwen 3.5.
+
+  The snap includes the following hardware-optimized inference engines:
+
+  * cpu: Optimized for x64 and ARM (armv8, armv9) CPUs
+  * nvidia-gpu: CUDA-enabled GPU acceleration
+  * nvidia-jetson-orin: CUDA-enabled GPU acceleration for NVIDIA Jetson Orin devices
+
+  The most suitable engine is automatically selected based on the available hardware.
+
   **Install:**
-  
+
   `sudo snap install qwen3-5`
-  
-  **Get help:**
-  
-  `qwen3-5 --help`
-  
-  **Licensing:**
-  
-  The Qwen 3.5 model is provided by Qwen under the Apache 2.0 license.
 
-  The licenses of all bundled software can be found inside the snap at `/snap/qwen3-5/current/usr/share/doc`.
+  **Run:**
 
+  `qwen3-5`
+
+  Some accelerators require extra drivers to be usable with this snap:
+  https://documentation.ubuntu.com/inference-snaps/how-to/setup/drivers/
+
+  **License:**
+
+  The Qwen 3.5 model is provided by Alibaba (Qwen) under the Apache 2.0 license.
+
+  The licenses of all the bundled software can be found after installing the snap at
+  `/snap/qwen3-5/current/usr/share/doc`.
+
+icon: snap/gui/icon-256.png
 website: https://documentation.ubuntu.com/inference-snaps
 source-code: https://github.com/canonical/qwen3.5-snap
 issues: https://github.com/canonical/inference-snaps/issues
@@ -366,3 +378,9 @@ apps:
     daemon: simple
     plugs:
       - network-bind
+
+lint:
+  ignore:
+    - metadata:
+      - license
+      - contact
