@@ -1,33 +1,30 @@
 # Qwen 3.5 inference snap
 [![qwen3-5](https://snapcraft.io/qwen3-5/badge.svg)](https://snapcraft.io/qwen3-5)
 
-Install [Qwen 3.5](https://qwen.ai/blog?id=qwen3.5), optimized directly for your hardware.
-This package deploys a high-performance runtime for local inference across arm and x86 platforms. It runs efficiently on pure CPU or leverages CUDA-enabled NVIDIA GPU acceleration.
+Qwen 3.5 is a multimodal instruction-tuned model from Qwen with vision capabilities, optimized directly for your hardware. It runs efficiently on pure CPU or leverages CUDA-enabled NVIDIA GPU acceleration.
 
-Before starting, install the necessary [drivers](https://documentation.ubuntu.com/inference-snaps/how-to/setup/drivers/) for your accelerator.
+Use this snap to quickly install an optimized environment for local inference with Qwen 3.5.
 
-| Engine | Arch | Description |
-|--------------|--------------|-------------|
-| cpu | amd64, arm64 | Optimized for several CPU variants (x86, armv8, armv9) |
-| nvidia-gpu | amd64, arm64 | CUDA-enabled GPU acceleration |
-| nvidia-jetson-orin | arm64 | CUDA-enabled GPU acceleration for NVIDIA Jetson Orin devices |
+The snap includes the following hardware-optimized inference engines:
+
+* cpu: Optimized for x64 and ARM (armv8, armv9) CPUs
+* nvidia-gpu: CUDA-enabled GPU acceleration
+* nvidia-jetson-orin: CUDA-enabled GPU acceleration for NVIDIA Jetson Orin devices
+
+The most suitable engine is automatically selected based on the available hardware.
 
 #### Install
-```
+```shell
 sudo snap install qwen3-5
 ```
-#### Use
-```
-qwen3-5 --help
+
+#### Run
+```shell
+qwen3-5
 ```
 
-#### Default configurations
-| Key | Value |
-|-----|-------|
-| http.port | 8352 |
-| http.host | 127.0.0.1 |
-| webui.http.port | 8353 |
-| webui.http.host | 127.0.0.1 |
+> [!TIP]
+> Some accelerators require extra [drivers](https://documentation.ubuntu.com/inference-snaps/how-to/setup/drivers/) to be usable with this snap.
 
 ## Resources
 
