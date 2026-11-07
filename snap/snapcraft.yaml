@@ -256,6 +256,8 @@ parts:
         echo "Skipping llamacpp-jetson-orin build (Jetson/arm64 only) on $CRAFT_ARCH_BUILD_FOR"
         exit 0
       fi
+      mkdir -p $CRAFT_PRIME/usr/share/doc/llama.cpp-jetson-orin
+      cp -laf "$CRAFT_PART_SRC/LICENSE" "$CRAFT_PRIME/usr/share/doc/llama.cpp-jetson-orin/LICENSE"
       craftctl default
     organize:
       # Move everything, including staged CUDA runtime libraries, to the component.
