@@ -232,6 +232,11 @@ parts:
 
   llamacpp-jetson-orin:
     source: https://github.com/ggml-org/llama.cpp.git
+    # Pin to the same llama.cpp build as the prebuilt llamacpp / llamacpp-cuda
+    # parts. Building unpinned master broke the arm64 build on 2026-11-20:
+    # upstream 2cbfc3c (#30672) added an unconditional #include <nvml.h> on
+    # CUDA builds, and nvml.h is not available in the Jetson build environment.
+    source-tag: b9611
     source-depth: 1
     plugin: cmake
     build-packages:
