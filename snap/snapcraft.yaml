@@ -232,6 +232,7 @@ parts:
 
   llamacpp-jetson-orin:
     source: https://github.com/ggml-org/llama.cpp.git
+    source-tag: b9611
     source-depth: 1
     plugin: cmake
     build-packages:
